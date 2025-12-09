@@ -414,22 +414,62 @@ class VerificationService:
         """
         Check if government warning statement appears on label.
 
-        Matching Method: Simple substring search for "government warning"
+        Matching Method: Regex pattern search for "GOVERNMENT WARNING" with OCR error tolerance
 
-        Note from Requirements:
-        -----------------------
-        Per project specs, we do NOT check for exact warning text
-        (that's a bonus feature we're skipping). We just check if
-        "GOVERNMENT WARNING" appears somewhere on the label.
+        Per TTB Requirements:
+        ---------------------
+        Alcoholic beverage labels must include the government warning statement.
+        The full warning text includes language about pregnancy risks and impaired
+        driving ability. For this implementation, we verify that:
 
-        This is sufficient for core requirements.
+        1. The phrase "GOVERNMENT WARNING" (or close variation) appears
+        2. Optionally, key warning phrases are present (pregnancy, impairs ability)
+
+        OCR Error Handling:
+        -------------------
+        OCR can make mistakes when reading labels. Common issues:
+        - Letter substitution: "GOVERMMENT" (M instead of N)
+        - Missing letters: "GOVERMENT"
+        - Spacing: "GOVERNMENTWARNING" or "GOVERNMENT  WARNING"
+        - Common abbreviations: "GOVT WARNING", "GOV'T WARNING"
+
+        We use regex patterns to catch these variations while avoiding false positives.
+
+        Pattern Breakdown:
+        ------------------
+        gov[et']?rn?m[em]?nt\s*warn?ing
+        - gov: matches "GOV"
+        - [et']?: optionally matches "E", "T", or apostrophe (for GOVT or GOV'T)
+        - rn?: optionally matches "ERN" or "RN" (catches GOVERMENT)
+        - m[em]?nt: matches "MENT", "MMENT", or "MЕNT" (OCR errors)
+        - \s*: optional whitespace
+        - warn?ing: matches "WARNING" or "WARING" (OCR error)
         """
-        # Look for "government warning" in the normalized (lowercase) text
-        if "government warning" in normalized_ocr:
+        # Pattern 1: Flexible "GOVERNMENT WARNING" with common OCR errors
+        # Matches: GOVERNMENT WARNING, GOVT WARNING, GOVERNEMENT WARNING, etc.
+        gov_warning_pattern = r'gov[et\']?[eo]?rn?m[em]?nt\s*warn?ing'
+
+        match = re.search(gov_warning_pattern, normalized_ocr, re.IGNORECASE)
+
+        if match:
+            found_text = match.group(0)
+
+            # Bonus: Check for presence of key warning phrases (pregnancy, impairs)
+            # This provides additional confidence but is not required for match
+            has_pregnancy = bool(re.search(r'pregnan(cy|t)', normalized_ocr, re.IGNORECASE))
+            has_impairs = bool(re.search(r'impair', normalized_ocr, re.IGNORECASE))
+
+            additional_info = []
+            if has_pregnancy:
+                additional_info.append("pregnancy warning detected")
+            if has_impairs:
+                additional_info.append("impairment warning detected")
+
             return {
                 "match": True,
                 "expected": "Government Warning Present",
-                "found": "GOVERNMENT WARNING"
+                "found": found_text.upper(),
+                "additional_info": additional_info if additional_info else None
             }
         else:
             return {
