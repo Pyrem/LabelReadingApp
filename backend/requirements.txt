@@ -1,0 +1,22 @@
+# Web Framework
+Flask==3.0.0
+# Flask is our web server - handles HTTP requests/responses
+
+# CORS Support (allows frontend to call backend from different port/domain)
+flask-cors==4.0.0
+# Needed for local development when frontend and backend run on different ports
+
+# OCR - Optical Character Recognition
+pytesseract==0.3.10
+# Python wrapper for Tesseract OCR engine
+# This is what extracts text from images
+
+# Image Processing
+Pillow==10.1.0
+# PIL (Python Imaging Library) - loads, manipulates, and saves images
+# We use this to preprocess images before OCR
+
+# HTTP Server for production
+gunicorn==21.2.0
+# Production-grade WSGI server for deploying Flask apps
+# Better than Flask's built-in development server
