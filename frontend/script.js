@@ -354,17 +354,6 @@ document.addEventListener('DOMContentLoaded', function() {
      * Dismiss error button
      */
     dismissErrorBtn.addEventListener('click', hideError);
-
-    // ===== HELPER FUNCTIONS =====
-
-    /**
-     * Scroll element into view smoothly
-     *
-     * This improves UX by guiding user's attention
-     */
-    HTMLElement.prototype.scrollIntoView = function(options) {
-        this.scrollIntoView(options || { behavior: 'smooth', block: 'start' });
-    };
 });
 
 /**
