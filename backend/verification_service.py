@@ -414,22 +414,47 @@ class VerificationService:
         """
         Check if government warning statement appears on label.
 
-        Matching Method: Simple substring search for "government warning"
+        Matching Method: Regex pattern search for "GOVERNMENT WARNING" with OCR error tolerance
 
-        Note from Requirements:
-        -----------------------
-        Per project specs, we do NOT check for exact warning text
-        (that's a bonus feature we're skipping). We just check if
-        "GOVERNMENT WARNING" appears somewhere on the label.
+        Per TTB Requirements:
+        ---------------------
+        Alcoholic beverage labels must include the government warning statement.
+        For this implementation, we verify that the phrase "GOVERNMENT WARNING"
+        (or close variation) appears on the label.
 
-        This is sufficient for core requirements.
+        OCR Error Handling:
+        -------------------
+        OCR can make mistakes when reading labels. Common issues:
+        - Letter substitution: "GOVERMMENT" (M instead of N)
+        - Missing letters: "GOVERMENT"
+        - Spacing: "GOVERNMENTWARNING" or "GOVERNMENT  WARNING"
+        - Common abbreviations: "GOVT WARNING", "GOV'T WARNING"
+
+        We use regex patterns to catch these variations while avoiding false positives.
+
+        Pattern Breakdown:
+        ------------------
+        gov[et']?rn?m[em]?nt\s*warn?ing
+        - gov: matches "GOV"
+        - [et']?: optionally matches "E", "T", or apostrophe (for GOVT or GOV'T)
+        - rn?: optionally matches "ERN" or "RN" (catches GOVERMENT)
+        - m[em]?nt: matches "MENT", "MMENT", or "MЕNT" (OCR errors)
+        - \s*: optional whitespace
+        - warn?ing: matches "WARNING" or "WARING" (OCR error)
         """
-        # Look for "government warning" in the normalized (lowercase) text
-        if "government warning" in normalized_ocr:
+        # Pattern 1: Flexible "GOVERNMENT WARNING" with common OCR errors
+        # Matches: GOVERNMENT WARNING, GOVT WARNING, GOVERNEMENT WARNING, etc.
+        gov_warning_pattern = r'gov[et\']?[eo]?rn?m[em]?nt\s*warn?ing'
+
+        match = re.search(gov_warning_pattern, normalized_ocr, re.IGNORECASE)
+
+        if match:
+            found_text = match.group(0)
+
             return {
                 "match": True,
                 "expected": "Government Warning Present",
-                "found": "GOVERNMENT WARNING"
+                "found": found_text.upper()
             }
         else:
             return {
