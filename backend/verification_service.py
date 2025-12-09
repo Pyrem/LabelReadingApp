@@ -170,15 +170,26 @@ class VerificationService:
         Returns:
         --------
         str
-            Normalized text (lowercase, stripped)
+            Normalized text (lowercase, stripped, whitespace collapsed)
 
         Why Normalize?
         --------------
         - "BOURBON" and "bourbon" should match
         - "  Whiskey  " and "Whiskey" should match
+        - "CREEKWOOD\nCELLARS" and "Creekwood Cellars" should match
         - Makes matching more reliable
+
+        Whitespace Handling:
+        -------------------
+        OCR often extracts text with newlines:
+        "CREEKWOOD\nCELLARS\n\nCABERNET\nSAUVIGNON"
+
+        We replace all whitespace (newlines, tabs, multiple spaces) with
+        single spaces so substring matching works correctly.
         """
-        return text.lower().strip()
+        # Replace all whitespace sequences (newlines, tabs, spaces) with single space
+        normalized = re.sub(r'\s+', ' ', text)
+        return normalized.lower().strip()
 
     def _check_brand_name(self, brand_name, normalized_ocr):
         """
