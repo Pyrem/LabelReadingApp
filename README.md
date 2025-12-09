@@ -119,7 +119,7 @@ Docker provides a consistent environment and handles all dependencies automatica
 #### Step 1: Clone Repository
 
 ```bash
-git clone <repository-url>
+git clone git@github.com:Pyrem/LabelReadingApp.git
 cd LabelReadingApp
 ```
 
@@ -206,7 +206,7 @@ tesseract --version
 #### Step 2: Clone Repository
 
 ```bash
-git clone <repository-url>
+git clone git@github.com:Pyrem/LabelReadingApp.git
 cd LabelReadingApp
 ```
 
@@ -454,8 +454,6 @@ Result: MATCH ✓ (substring found)
 ## 🔮 Future Enhancements
 
 ### If More Time Was Available:
-
-**Short-term (1-2 days):**
 1. **Image preprocessing improvements**
    - Auto-rotate skewed images
    - Denoise low-quality images
@@ -471,34 +469,32 @@ Result: MATCH ✓ (substring found)
    - Test OCR service with sample images
    - Test API endpoints
 
-**Medium-term (1 week):**
-1. **Advanced matching**
+4. **Advanced matching**
    - Fuzzy string matching (Levenshtein distance)
    - Handle common OCR errors ('O' vs '0', 'I' vs 'l')
    - Synonym detection ("IPA" vs "India Pale Ale")
 
-2. **Database storage**
+5. **Database storage**
    - Save verification history
    - Analytics dashboard
    - Audit trail for compliance
 
-3. **Image highlighting**
+6. **Image highlighting**
    - Draw bounding boxes around detected text
    - Visual indication of what was found
 
-**Long-term (1 month+):**
-1. **Production deployment**
+7. **Production deployment**
    - Docker containerization
    - CI/CD pipeline
    - Load balancing and scaling
    - Monitoring and logging (Sentry, DataDog)
 
-2. **Advanced AI**
+8. **Advanced AI**
    - Replace Tesseract with AWS Textract or Google Vision
    - Use Claude or GPT-4 Vision for intelligent verification
    - Detect label layout issues (missing elements, wrong placement)
 
-3. **Multiple product types**
+9. **Multiple product types**
    - Different forms for Beer/Wine/Spirits
    - Product-specific validation rules
    - TTB regulation compliance checks
