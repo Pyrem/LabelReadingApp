@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Alcohol Label Verification</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!--
+        Page Structure:
+        - Header with title
+        - Main container with two sections:
+          1. Input section (form + image upload)
+          2. Results section (initially hidden)
+    -->
+
+    <header>
+        <h1>🍷 Alcohol Label Verification System</h1>
+        <p class="subtitle">Verify that label information matches application data</p>
+    </header>
+
+    <main class="container">
+        <!--
+            INPUT SECTION
+            Contains the form and image upload
+        -->
+        <section class="input-section">
+            <h2>TTB Label Application Form</h2>
+            <p class="instructions">
+                Fill in the product information from your application, then upload an image
+                of the alcohol label to verify that they match.
+            </p>
+
+            <form id="verificationForm">
+                <!-- Brand Name Field -->
+                <div class="form-group">
+                    <label for="brandName">
+                        Brand Name <span class="required">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        id="brandName"
+                        name="brand_name"
+                        placeholder="e.g., Old Tom Distillery"
+                        required
+                    >
+                    <small class="help-text">
+                        The brand under which the product is sold
+                    </small>
+                </div>
+
+                <!-- Product Type Field -->
+                <div class="form-group">
+                    <label for="productType">
+                        Product Class/Type <span class="required">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        id="productType"
+                        name="product_type"
+                        placeholder="e.g., Kentucky Straight Bourbon Whiskey"
+                        required
+                    >
+                    <small class="help-text">
+                        The type/class designation (e.g., Bourbon Whiskey, IPA, etc.)
+                    </small>
+                </div>
+
+                <!-- ABV Field -->
+                <div class="form-group">
+                    <label for="abv">
+                        Alcohol Content (ABV %) <span class="required">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        id="abv"
+                        name="abv"
+                        placeholder="e.g., 45"
+                        required
+                        pattern="[0-9]+(\.[0-9]+)?"
+                        title="Please enter a valid number (e.g., 45 or 45.0)"
+                    >
+                    <small class="help-text">
+                        Alcohol by volume percentage (enter just the number, e.g., "45")
+                    </small>
+                </div>
+
+                <!-- Net Contents Field (Optional) -->
+                <div class="form-group">
+                    <label for="netContents">
+                        Net Contents <span class="optional">(optional)</span>
+                    </label>
+                    <input
+                        type="text"
+                        id="netContents"
+                        name="net_contents"
+                        placeholder="e.g., 750 mL"
+                    >
+                    <small class="help-text">
+                        Volume of the product (e.g., 750 mL, 12 fl oz)
+                    </small>
+                </div>
+
+                <!-- Image Upload Field -->
+                <div class="form-group">
+                    <label for="labelImage">
+                        Label Image <span class="required">*</span>
+                    </label>
+                    <input
+                        type="file"
+                        id="labelImage"
+                        name="image"
+                        accept="image/png,image/jpeg,image/jpg,image/gif"
+                        required
+                    >
+                    <small class="help-text">
+                        Upload an image of the alcohol label (JPEG, PNG, or GIF)
+                    </small>
+
+                    <!-- Image Preview -->
+                    <div id="imagePreview" class="image-preview" style="display: none;">
+                        <img id="previewImg" src="" alt="Label preview">
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submitBtn" class="btn-primary">
+                    Verify Label
+                </button>
+
+                <!-- Loading Indicator (Hidden by default) -->
+                <div id="loading" class="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Processing image and verifying label...</p>
+                </div>
+            </form>
+        </section>
+
+        <!--
+            RESULTS SECTION
+            Initially hidden, shown after verification completes
+        -->
+        <section id="resultsSection" class="results-section" style="display: none;">
+            <h2>Verification Results</h2>
+
+            <!-- Overall Status Banner -->
+            <div id="overallStatus" class="status-banner">
+                <!-- Will be populated with success/failure message -->
+            </div>
+
+            <!-- Detailed Field Results -->
+            <div id="detailedResults" class="detailed-results">
+                <!-- Will be populated with individual field results -->
+            </div>
+
+            <!-- OCR Text Display (for debugging/transparency) -->
+            <details class="ocr-details">
+                <summary>View Extracted Text from Label (OCR Output)</summary>
+                <pre id="ocrText" class="ocr-text"></pre>
+            </details>
+
+            <!-- Try Again Button -->
+            <button id="tryAgainBtn" class="btn-secondary">
+                Verify Another Label
+            </button>
+        </section>
+
+        <!-- Error Display (Hidden by default) -->
+        <div id="errorDisplay" class="error-display" style="display: none;">
+            <h3>⚠️ Error</h3>
+            <p id="errorMessage"></p>
+            <button id="dismissErrorBtn" class="btn-secondary">Dismiss</button>
+        </div>
+    </main>
+
+    <footer>
+        <p>
+            AI-Powered Label Verification System |
+            Using Tesseract OCR for text extraction
+        </p>
+    </footer>
+
+    <!-- Load JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,455 @@
+/*
+    Alcohol Label Verification - Styles
+
+    Design Philosophy:
+    - Clean and minimal (no fancy frameworks)
+    - Good contrast for readability
+    - Responsive (works on mobile/desktop)
+    - Clear visual hierarchy
+*/
+
+/* ===== RESET & BASE STYLES ===== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/*
+    box-sizing: border-box means:
+    width = content + padding + border
+    (Instead of width = just content)
+
+    This makes sizing more intuitive.
+*/
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/*
+    System font stack: Uses native fonts for better performance
+    - macOS: -apple-system
+    - Windows: Segoe UI
+    - Linux: Oxygen, Ubuntu
+*/
+
+/* ===== HEADER ===== */
+
+header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem 1rem;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+header .subtitle {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+/* ===== MAIN CONTAINER ===== */
+
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    flex: 1;
+}
+
+/*
+    max-width: 800px keeps content readable
+    (Lines that are too wide are hard to read)
+
+    margin: 2rem auto centers the container
+    flex: 1 makes container take remaining space (pushes footer down)
+*/
+
+/* ===== INPUT SECTION ===== */
+
+.input-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.input-section h2 {
+    color: #667eea;
+    margin-bottom: 0.5rem;
+}
+
+.instructions {
+    color: #666;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-left: 4px solid #667eea;
+    border-radius: 4px;
+}
+
+/* ===== FORM STYLES ===== */
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+/*
+    display: block makes label take full width
+    This puts input on next line (better for mobile)
+*/
+
+.required {
+    color: #dc3545;
+}
+
+.optional {
+    color: #6c757d;
+    font-weight: normal;
+    font-size: 0.9rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="file"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+/*
+    transition: Makes border color change smoothly on focus
+*/
+
+.form-group input[type="text"]:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+/*
+    :focus = when user clicks/tabs into input
+    outline: none removes default browser outline
+    We replace it with colored border for better look
+*/
+
+.form-group input[type="file"] {
+    padding: 0.5rem;
+}
+
+.help-text {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* ===== IMAGE PREVIEW ===== */
+
+.image-preview {
+    margin-top: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    background-color: #f8f9fa;
+}
+
+.image-preview img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+/*
+    max-width: 100% ensures image never overflows container
+    height: auto maintains aspect ratio
+*/
+
+/* ===== BUTTONS ===== */
+
+.btn-primary,
+.btn-secondary {
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/*
+    cursor: pointer shows hand icon on hover
+*/
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/*
+    transform: translateY(-2px) lifts button slightly
+    Creates nice "floating" effect on hover
+*/
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* ===== LOADING SPINNER ===== */
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: #667eea;
+}
+
+.spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+/*
+    CSS Animation for spinner:
+    - Creates a circle with colored top border
+    - Rotates 360 degrees infinitely
+*/
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ===== RESULTS SECTION ===== */
+
+.results-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.results-section h2 {
+    color: #667eea;
+    margin-bottom: 1.5rem;
+}
+
+/* ===== STATUS BANNER ===== */
+
+.status-banner {
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.status-banner.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 2px solid #c3e6cb;
+}
+
+.status-banner.failure {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 2px solid #f5c6cb;
+}
+
+/*
+    .success and .failure are modifier classes
+    We add them dynamically with JavaScript
+*/
+
+/* ===== DETAILED RESULTS ===== */
+
+.detailed-results {
+    margin-bottom: 2rem;
+}
+
+.result-item {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    border-left: 4px solid;
+}
+
+.result-item.match {
+    background-color: #d4edda;
+    border-left-color: #28a745;
+}
+
+.result-item.no-match {
+    background-color: #f8d7da;
+    border-left-color: #dc3545;
+}
+
+.result-item.optional {
+    background-color: #e7f3ff;
+    border-left-color: #007bff;
+}
+
+.result-item h4 {
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/*
+    display: flex with gap creates space between icon and text
+*/
+
+.result-item .icon {
+    font-size: 1.2rem;
+}
+
+.result-item .field-details {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.5rem;
+}
+
+.result-item .field-details strong {
+    color: #333;
+}
+
+/* ===== OCR TEXT DETAILS ===== */
+
+.ocr-details {
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+.ocr-details summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: #667eea;
+    padding: 0.5rem;
+}
+
+.ocr-details summary:hover {
+    background-color: #e9ecef;
+    border-radius: 4px;
+}
+
+.ocr-text {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/*
+    pre-wrap: Preserves whitespace and newlines from OCR
+    overflow-x: auto: Adds scrollbar if text is too wide
+*/
+
+/* ===== ERROR DISPLAY ===== */
+
+.error-display {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 2px solid #f5c6cb;
+    margin-bottom: 2rem;
+}
+
+.error-display h3 {
+    margin-bottom: 1rem;
+}
+
+/* ===== FOOTER ===== */
+
+footer {
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: auto;
+}
+
+footer p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/*
+    Mobile devices: smaller padding, adjust font sizes
+*/
+
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    .input-section,
+    .results-section {
+        padding: 1rem;
+    }
+
+    .container {
+        margin: 1rem auto;
+    }
+}
+
+/*
+    @media queries apply styles only at certain screen widths
+    This makes the site "responsive" (adapts to mobile/tablet/desktop)
+*/
