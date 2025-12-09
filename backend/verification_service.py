@@ -419,11 +419,8 @@ class VerificationService:
         Per TTB Requirements:
         ---------------------
         Alcoholic beverage labels must include the government warning statement.
-        The full warning text includes language about pregnancy risks and impaired
-        driving ability. For this implementation, we verify that:
-
-        1. The phrase "GOVERNMENT WARNING" (or close variation) appears
-        2. Optionally, key warning phrases are present (pregnancy, impairs ability)
+        For this implementation, we verify that the phrase "GOVERNMENT WARNING"
+        (or close variation) appears on the label.
 
         OCR Error Handling:
         -------------------
@@ -454,22 +451,10 @@ class VerificationService:
         if match:
             found_text = match.group(0)
 
-            # Bonus: Check for presence of key warning phrases (pregnancy, impairs)
-            # This provides additional confidence but is not required for match
-            has_pregnancy = bool(re.search(r'pregnan(cy|t)', normalized_ocr, re.IGNORECASE))
-            has_impairs = bool(re.search(r'impair', normalized_ocr, re.IGNORECASE))
-
-            additional_info = []
-            if has_pregnancy:
-                additional_info.append("pregnancy warning detected")
-            if has_impairs:
-                additional_info.append("impairment warning detected")
-
             return {
                 "match": True,
                 "expected": "Government Warning Present",
-                "found": found_text.upper(),
-                "additional_info": additional_info if additional_info else None
+                "found": found_text.upper()
             }
         else:
             return {
