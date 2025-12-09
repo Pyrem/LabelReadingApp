@@ -3,9 +3,8 @@ services:
     name: label-verification-app
     env: python
     buildCommand: |
-      apt-get update
-      apt-get install -y tesseract-ocr
-      cd backend && pip install -r requirements.txt
+      apt-get update && apt-get install -y tesseract-ocr
+      pip install -r backend/requirements.txt
     startCommand: cd backend && gunicorn --bind 0.0.0.0:$PORT app:app
     envVars:
       - key: PYTHON_VERSION

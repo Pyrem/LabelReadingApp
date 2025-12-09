@@ -1,0 +1,15 @@
+# Root-level requirements.txt for deployment platforms
+# Actual requirements are in backend/requirements.txt
+
+# Web Framework
+Flask==3.0.0
+flask-cors==4.0.0
+
+# OCR - Optical Character Recognition
+pytesseract==0.3.10
+
+# Image Processing
+Pillow==10.1.0
+
+# HTTP Server for production
+gunicorn==21.2.0
