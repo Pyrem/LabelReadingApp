@@ -1,9 +1,8 @@
 services:
   - type: web
     name: label-verification-app
-    env: python
-    buildCommand: bash render-build.sh
-    startCommand: cd backend && gunicorn --bind 0.0.0.0:$PORT app:app
+    env: docker
+    dockerfilePath: ./Dockerfile
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.0
+      - key: PORT
+        value: 10000
