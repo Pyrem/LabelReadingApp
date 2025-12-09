@@ -103,13 +103,84 @@ This application simulates a simplified version of the Alcohol and Tobacco Tax a
 
 ## 📦 Installation & Setup
 
-### Prerequisites
+This application can be run using **Docker** (recommended) or **local Python** setup.
+
+---
+
+### 🐳 Option 1: Docker Setup (Recommended)
+
+Docker provides a consistent environment and handles all dependencies automatically, including Tesseract OCR.
+
+#### Prerequisites
+- **Docker** installed on your system
+  - macOS/Windows: [Docker Desktop](https://www.docker.com/products/docker-desktop)
+  - Linux: `sudo apt-get install docker.io`
+
+#### Step 1: Clone Repository
+
+```bash
+git clone <repository-url>
+cd LabelReadingApp
+```
+
+#### Step 2: Build Docker Image
+
+```bash
+docker build -t label-verification-app .
+```
+
+This builds the image with:
+- Python 3.11
+- Tesseract OCR (automatically installed)
+- All Python dependencies
+- Application code
+
+#### Step 3: Run Container
+
+```bash
+docker run -p 5000:10000 label-verification-app
+```
+
+**Parameters:**
+- `-p 5000:10000` maps port 10000 inside container to port 5000 on your machine
+- Add `-d` to run in background (detached mode)
+
+#### Step 4: Access Application
+
+Open your browser to:
+```
+http://localhost:5000
+```
+
+#### Stop Container
+
+```bash
+# Find container ID
+docker ps
+
+# Stop container
+docker stop <container-id>
+```
+
+**Why use Docker?**
+✅ No manual Tesseract installation
+✅ Consistent environment across all systems
+✅ Same setup as production deployment
+✅ Isolated from system dependencies
+
+---
+
+### 🐍 Option 2: Local Python Setup (Development)
+
+For local development without Docker:
+
+#### Prerequisites
 
 - **Python 3.9 or higher**
-- **Tesseract OCR engine** (installed on system)
+- **Tesseract OCR engine** (system package)
 - **pip** (Python package manager)
 
-### Step 1: Install Tesseract OCR
+#### Step 1: Install Tesseract OCR
 
 Tesseract must be installed on your system (it's not a Python package).
 
@@ -132,14 +203,14 @@ Download installer from: https://github.com/UB-Mannheim/tesseract/wiki
 tesseract --version
 ```
 
-### Step 2: Clone Repository
+#### Step 2: Clone Repository
 
 ```bash
 git clone <repository-url>
 cd LabelReadingApp
 ```
 
-### Step 3: Create Virtual Environment
+#### Step 3: Create Virtual Environment
 
 ```bash
 # Create virtual environment
@@ -153,12 +224,7 @@ source venv/bin/activate
 venv\Scripts\activate
 ```
 
-**Why use a virtual environment?**
-- Isolates project dependencies
-- Prevents version conflicts
-- Makes deployment easier
-
-### Step 4: Install Python Dependencies
+#### Step 4: Install Python Dependencies
 
 ```bash
 cd backend
@@ -172,7 +238,7 @@ This installs:
 - Pillow (image processing)
 - gunicorn (production server)
 
-### Step 5: Verify Installation
+#### Step 5: Verify Installation
 
 ```bash
 python3 -c "import pytesseract; print('✓ pytesseract installed')"
@@ -184,7 +250,36 @@ python3 -c "import flask; print('✓ Flask installed')"
 
 ## 🚀 Usage
 
-### Running Locally
+### Running with Docker
+
+1. **Build the image** (if not already built):
+   ```bash
+   docker build -t label-verification-app .
+   ```
+
+2. **Run the container**:
+   ```bash
+   docker run -p 5000:10000 label-verification-app
+   ```
+
+   Or run in background:
+   ```bash
+   docker run -d -p 5000:10000 --name label-app label-verification-app
+   ```
+
+3. **Access the application**:
+   ```
+   http://localhost:5000
+   ```
+
+4. **Stop the container**:
+   ```bash
+   docker stop label-app  # if using --name flag
+   # or
+   docker stop <container-id>
+   ```
+
+### Running with Local Python
 
 1. **Activate virtual environment** (if not already activated):
    ```bash
@@ -210,11 +305,28 @@ python3 -c "import flask; print('✓ Flask installed')"
    http://localhost:5000
    ```
 
-4. **Use the application**:
-   - Fill out the form with product information
-   - Upload a label image
-   - Click "Verify Label"
-   - View results
+4. **Stop the server**:
+   Press `Ctrl+C` in the terminal
+
+### Using the Application
+
+1. **Fill out the form** with product information:
+   - Brand Name (e.g., "Old Tom Distillery")
+   - Product Class/Type (e.g., "Bourbon Whiskey")
+   - Alcohol Content/ABV (e.g., "45")
+   - Net Contents (optional, e.g., "750 mL")
+
+2. **Upload a label image**:
+   - Supported formats: JPEG, PNG, GIF
+   - Max size: 16MB
+   - Image should contain readable text
+
+3. **Click "Verify Label"**
+
+4. **View results**:
+   - Overall match status (✓ or ✗)
+   - Field-by-field verification details
+   - Extracted OCR text (expandable section)
 
 ### Testing the Application
 
@@ -223,13 +335,9 @@ Create a test label image or use an image with text that includes:
 - Product type (e.g., "Bourbon Whiskey")
 - ABV percentage (e.g., "45%")
 - Net contents (e.g., "750 mL")
-- Government warning statement
+- Government warning statement (e.g., "GOVERNMENT WARNING")
 
-Fill the form with matching information and upload the image.
-
-### Stopping the Server
-
-Press `Ctrl+C` in the terminal running the Flask server.
+Fill the form with matching information and upload the image to verify the OCR and matching logic work correctly.
 
 ---
 
@@ -482,22 +590,89 @@ Health check endpoint.
 
 ---
 
+## 🚢 Deployment
+
+### Render (Production)
+
+This application is configured for deployment on [Render](https://render.com) using Docker.
+
+**Deployment Configuration:**
+- `Dockerfile` - Defines the container image with Tesseract OCR and Python dependencies
+- `render.yaml` - Render service configuration (Docker environment, port settings)
+
+**Steps to Deploy:**
+
+1. **Push code to GitHub**:
+   ```bash
+   git push origin main
+   ```
+
+2. **Create Render account** and connect your GitHub repository
+
+3. **Create new Web Service**:
+   - Render will auto-detect the `Dockerfile`
+   - Environment: Docker (auto-selected)
+   - Build: Automatic from Dockerfile
+   - Port: 10000 (configured in render.yaml)
+
+4. **Deploy**:
+   - Render will build the Docker image (includes Tesseract installation)
+   - Deploy the container
+   - Provide a live URL (e.g., `https://your-app.onrender.com`)
+
+**Why Docker for Deployment?**
+- ✅ Tesseract OCR installs automatically during Docker build
+- ✅ No aptfile or buildpack issues
+- ✅ Consistent environment (development = production)
+- ✅ Easy to reproduce and debug
+
+### Other Platforms
+
+The Dockerfile can be deployed to any platform that supports Docker:
+- **AWS ECS/Fargate**: Use the Dockerfile
+- **Google Cloud Run**: Deploy container directly
+- **Heroku**: Supports Dockerfile deployment
+- **DigitalOcean App Platform**: Docker support available
+
+---
+
 ## 🧪 Testing Checklist
 
-- [ ] Install Tesseract OCR
+### Docker Testing
+- [ ] Install Docker
+- [ ] Build Docker image: `docker build -t label-verification-app .`
+- [ ] Run container: `docker run -p 5000:10000 label-verification-app`
+- [ ] Open browser to http://localhost:5000
+- [ ] Verify application loads
+- [ ] Test OCR functionality with sample image
+
+### Local Python Testing
+- [ ] Install Tesseract OCR (`tesseract --version` succeeds)
 - [ ] Create virtual environment
 - [ ] Install Python dependencies
-- [ ] Start Flask server
+- [ ] Start Flask server: `python app.py`
 - [ ] Open browser to http://localhost:5000
+- [ ] Verify application loads
+
+### Functional Testing
 - [ ] Fill form with sample data
 - [ ] Upload clear label image with matching text
-- [ ] Verify successful match
+- [ ] Verify successful match (✓ green indicators)
 - [ ] Upload image with mismatched text
-- [ ] Verify failure with clear error messages
-- [ ] Test with missing form fields
+- [ ] Verify failure with clear error messages (✗ red indicators)
+- [ ] Test with missing form fields (browser validation)
 - [ ] Test with invalid image format
 - [ ] Test with oversized image (>16MB)
-- [ ] Test responsive design on mobile
+- [ ] Test responsive design on mobile/tablet
+- [ ] Test government warning detection (with/without warning text)
+- [ ] Verify extracted OCR text is displayed correctly
+
+### Deployment Testing
+- [ ] Code pushed to GitHub
+- [ ] Render service deployed successfully
+- [ ] Live URL accessible
+- [ ] Production OCR functionality works
+- [ ] No Tesseract installation errors in logs
 
 ---
 
