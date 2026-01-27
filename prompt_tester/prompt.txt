@@ -1,0 +1,6 @@
+Replace this with your system prompt that changes Claude's behavior.
+
+For example, if you want Claude to always respond in haiku format:
+"Always respond to the user in haiku format (5-7-5 syllables)."
+
+Delete everything in this file and paste your actual prompt here.
